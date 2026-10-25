@@ -1,0 +1,88 @@
+# Threadfin for ZimaOS (and CasaOS).
+#
+# ZimaOS → App Store → "+" → Install a customized app → Import,
+# then paste this file (or its raw URL):
+#   https://raw.githubusercontent.com/Mexuus/iptv-us/main/zimaos-compose.yml
+#
+# Threadfin presents the US playlist to Plex as an HDHomeRun tuner, which is the
+# only live-TV source Plex accepts. Change the "published" port if 34400 is taken.
+name: threadfin
+services:
+  threadfin:
+    image: fyb3roptik/threadfin:latest
+    container_name: threadfin
+    restart: unless-stopped
+    ports:
+      - target: 34400
+        published: "34400"
+        protocol: tcp
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: America/New_York
+    volumes:
+      - /DATA/AppData/threadfin/conf:/home/threadfin/conf
+      - /DATA/AppData/threadfin/temp:/tmp/threadfin:rw
+    x-casaos:
+      ports:
+        - container: "34400"
+          description:
+            en_US: Threadfin web interface, and the tuner address Plex connects to
+      volumes:
+        - container: /home/threadfin/conf
+          description:
+            en_US: Settings, channel mapping and EPG assignments
+        - container: /tmp/threadfin
+          description:
+            en_US: Stream buffer scratch space
+
+x-casaos:
+  id: com.mexuus.threadfin
+  main: threadfin
+  index: /web/
+  port_map: "34400"
+  scheme: http
+  icon: https://avatars.githubusercontent.com/u/105448329?s=200&v=4
+  title:
+    en_US: Threadfin
+  tagline:
+    en_US: M3U to HDHomeRun proxy for Plex Live TV
+  description:
+    en_US: >-
+      Threadfin takes an M3U playlist and an XMLTV guide and presents them to
+      Plex, Emby or Jellyfin as an HDHomeRun tuner, which is the only kind of
+      live-TV source those servers accept. Pre-pointed at a curated US-only
+      playlist (sports, movies, news, broadcast and entertainment) that is
+      rebuilt daily from the iptv-org database with dead streams removed.
+  author: Mexuus
+  developer: Fyb3roptik
+  category: Media
+  architectures:
+    - amd64
+    - arm64
+  version: "1.2.37"
+  website: https://github.com/Threadfin/Threadfin
+  repo: https://github.com/Mexuus/iptv-us
+  support: https://github.com/Threadfin/Threadfin/issues
+  tips:
+    before_install:
+      en_US: |
+        Set `TZ` to your timezone before installing, then open Threadfin and:
+
+        1. **Playlist → M3U** — add
+           `https://raw.githubusercontent.com/Mexuus/iptv-us/main/us.m3u8`
+        2. **XMLTV** — add
+           `https://epgshare01.online/epgshare01/epg_ripper_US2.xml.gz`
+        3. **Settings → Threadfin URL/Domain** — set to `192.168.68.127:34400`.
+           Streams fail to play in Plex if this is left wrong.
+        4. **Settings → Buffer** — choose `FFmpeg`. The RAM buffer is unreliable
+           with HLS restreams.
+        5. **Settings → Tuners** — 4 to 8 simultaneous streams.
+        6. **Mapping** — activate the channels you want, number them, and match
+           each to a guide entry. The playlist and guide use different id
+           schemes, so this pairing is manual but only has to be done once.
+
+        Then in Plex: **Settings → Live TV & DVR → Set Up Plex DVR**, choose
+        *enter its network address manually*, and give it `192.168.68.127:34400`.
+        For the guide pick *Have an XMLTV guide on your server?* and enter
+        `http://192.168.68.127:34400/xmltv/threadfin.xml`. Requires Plex Pass.
