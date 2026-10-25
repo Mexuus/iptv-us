@@ -26,7 +26,9 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 API = "https://iptv-org.github.io/api"
-EPG_URL = "https://iptv-org.github.io/epg/index.m3u"
+# iptv-org no longer hosts prebuilt guides; its tvg-ids won't match this feed's
+# ids, so map channels to guide entries in Threadfin/xTeVe rather than relying on this.
+EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_US2.xml.gz"
 HERE = Path(__file__).parent
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36"
 
