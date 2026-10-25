@@ -91,11 +91,8 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
     for logo in logos:
         logo_for.setdefault(logo["channel"], logo["url"])
 
-    # Prefer the feed flagged as the channel's main one for tvg-id / EPG matching.
-    main_feed: dict[str, str] = {}
-    for feed in feeds:
-        if feed.get("is_main"):
-            main_feed[feed["channel"]] = feed["id"]
+    # iptv-org EPG ids are "<channel>" for the main feed and "<channel>@<feed>" otherwise.
+    main_feeds = {(f["channel"], f["id"]) for f in feeds if f.get("is_main")}
 
     streams_for: dict[str, list[dict]] = defaultdict(list)
     for s in streams:
@@ -167,7 +164,8 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
 
     lines = [f'#EXTM3U x-tvg-url="{EPG_URL}"']
     for c, s in entries:
-        cid = main_feed.get(c["id"], c["id"])
+        feed = s.get("feed")
+        cid = f'{c["id"]}@{feed}' if feed and (c["id"], feed) not in main_feeds else c["id"]
         name = s.get("name") or c["name"]
         quality = s.get("quality")
         if quality and quality not in name:
