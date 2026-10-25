@@ -1,0 +1,155 @@
+# Curated list of popular US channels, grouped by the group-title shown in your player.
+# Matching is case-insensitive and ignores spaces/punctuation, against the
+# channel name and its alt_names in the iptv-org database.
+#
+# Names here were checked against US channels that have at least one free stream.
+# Entries that can't be matched are skipped with a warning, so it is safe to add
+# speculative names. Find exact names here: https://iptv-org.github.io/
+
+Broadcast:
+  - ABC
+  - CBS
+  - NBC
+  - Fox
+  - PBS
+  - Telemundo
+  - Univision
+  - UniMas
+  - Estrella TV
+
+Sports:
+  - ESPN
+  - ESPN 2
+  - ESPNU
+  - ESPN Deportes
+  - SEC Network
+  - ACC Network
+  - Big Ten Network
+  - Fox Sports 1
+  - Fox Sports 2
+  - CBS Sports HQ
+  - CBS Sports Golazo Network
+  - NFL Network
+  - NFL Channel
+  - NBA TV
+  - MLB Network
+  - MLB Strike Zone
+  - NHL Network
+  - Tennis Channel
+  - beIN SPORTS XTRA
+  - WWE Network
+  - TUDN
+  - MAVTV
+  - Stadium
+  - SportsGrid
+  - PBR RidePass
+  - World Poker Tour
+  - Outdoor Channel
+  - Unbeaten
+
+News:
+  - CNN
+  - HLN
+  - Fox News Channel
+  - CNBC
+  - MS NOW
+  - Bloomberg TV
+  - ABC News Live
+  - CBS News
+  - NBC News NOW
+  - Newsmax TV
+  - Scripps News
+  - Cheddar News
+  - Reuters TV
+  - The Weather Channel
+  - Fox Weather
+  - WeatherNation
+  - AccuWeather NOW
+
+Movies:
+  - AMC
+  - IFC
+  - TCM
+  - SYFY
+  - Movies!
+  - Paramount Movie Channel
+  - Lifetime Movies
+  - Starz
+  - Starz Cinema
+  - Starz Comedy
+  - HBO
+  - HBO 2
+  - Cinemax
+  - Universal Cinema
+  - Hi-YAH!
+  - Shout! Factory TV
+  - RetroCrush
+  - Westerns 4U
+
+Entertainment:
+  - TBS
+  - TNT
+  - USA Network
+  - FX
+  - E!
+  - Comedy Central
+  - MTV
+  - VH1
+  - BET
+  - TV Land Sitcoms
+  - TV Land Drama
+  - A&E
+  - truTV
+  - Court TV
+  - MeTV
+  - Retro TV
+  - Laff
+  - Grit Xtra
+  - Bounce
+  - Bounce XL
+  - ION TV
+  - ION Plus
+  - Charge!
+  - Comet
+  - Game Show Network
+  - BBC America
+  - VICE TV
+  - AXS TV
+  - CMT
+  - TMZ
+
+Kids & Family:
+  - Cartoon Network
+  - Adult Swim
+  - Nickelodeon
+  - Nick Jr.
+  - Nicktoons
+  - TeenNick
+  - Disney Junior
+  - Boomerang
+  - PBS Kids
+  - Crunchyroll
+  - HappyKids
+  - Baby Shark TV
+  - Discovery Family
+  - Dove Channel
+  - The Pet Collective
+
+Lifestyle & Documentary:
+  - HGTV
+  - Food Network
+  - OWN
+  - Magnolia Network
+  - Hallmark Channel
+  - Discovery Channel
+  - Discovery Turbo
+  - Investigation Discovery
+  - Animal Planet
+  - History
+  - National Geographic
+  - Nat Geo Wild
+  - Smithsonian Channel Selects
+  - MagellanTV Now
+  - Forensic Files
+  - Destination America
+  - PowerNation TV

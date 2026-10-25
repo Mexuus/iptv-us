@@ -1,0 +1,46 @@
+name: Update US playlist
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # 09:00 UTC daily (~04:00 ET)
+  workflow_dispatch:
+  push:
+    paths:
+      - channels.yml
+      - build_us_playlist.py
+      - .github/workflows/update-playlist.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-playlist
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build curated playlist
+        run: python build_us_playlist.py --check --out us.m3u8
+
+      - name: Build full US playlist
+        run: python build_us_playlist.py --all --out us-all.m3u8
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add us.m3u8 us-all.m3u8
+          if git diff --cached --quiet; then
+            echo "No playlist changes."
+          else
+            git commit -m "chore: refresh playlists ($(date -u +%Y-%m-%d))"
+            git push
+          fi
