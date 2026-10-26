@@ -1,4 +1,4 @@
-"""Generate a US-only M3U8 playlist from the iptv-org public API.
+"""Generate a US-only, English-language M3U8 playlist from the iptv-org public API.
 
 Usage:
     python build_us_playlist.py                 # curated list from channels.yml
@@ -34,6 +34,17 @@ HERE = Path(__file__).parent
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36"
 
 QUALITY_RANK = {"2160p": 6, "1440p": 5, "1080p": 4, "720p": 3, "576p": 2, "480p": 1}
+
+# ISO 639-3 code used by iptv-org. Audio language is a property of the feed, not the
+# channel: many US channels carry both an English and a Spanish/Portuguese feed.
+LANGUAGE = "eng"
+
+# iptv-org sometimes tags a Spanish/French feed as English ("CBS en espanol" is listed
+# as eng), leaving the channel name as the only reliable signal.
+MISTAGGED_NAME = re.compile(
+    r"(?i)\b(en\s+espa[nñ]ol|espa[nñ]ol|latin\s+america|latino|latam|deportes"
+    r"|telenovelas?|en\s+fran[cç]ais|fran[cç]ais|cine|brasil|portugu[eê]s)\b"
+)
 
 
 def fetch_json(name: str):
@@ -123,11 +134,32 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
     # iptv-org EPG ids are "<channel>" for the main feed and "<channel>@<feed>" otherwise.
     main_feeds = {(f["channel"], f["id"]) for f in feeds if f.get("is_main")}
 
+    feed_languages: dict[tuple[str, str | None], set[str]] = {}
+    channel_languages: dict[str, set[str]] = defaultdict(set)
+    for f in feeds:
+        langs = set(f.get("languages") or [])
+        feed_languages[(f["channel"], f["id"])] = langs
+        channel_languages[f["channel"]] |= langs
+
+    def in_language(stream: dict) -> bool:
+        # streams.json sometimes names a feed that feeds.json doesn't define, so fall
+        # back to every language the channel is known to carry before giving up.
+        cid = stream["channel"]
+        langs = feed_languages.get((cid, stream.get("feed"))) or channel_languages.get(cid)
+        return not langs or LANGUAGE in langs
+
     streams_for: dict[str, list[dict]] = defaultdict(list)
+    foreign = 0
     for s in streams:
         cid = s.get("channel")
-        if cid:
-            streams_for[cid].append(s)
+        if not cid:
+            continue
+        if not in_language(s):
+            if (by_id.get(cid) or {}).get("country") == "US":
+                foreign += 1
+            continue
+        streams_for[cid].append(s)
+    print(f"Skipped {foreign} non-English US streams.", file=sys.stderr)
 
     us = [
         c
@@ -135,9 +167,10 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
         if c.get("country") == "US"
         and not c.get("is_nsfw")
         and not c.get("closed")
+        and not MISTAGGED_NAME.search(c["name"])
         and streams_for.get(c["id"])
     ]
-    print(f"US channels with at least one stream: {len(us)}", file=sys.stderr)
+    print(f"US channels with at least one English stream: {len(us)}", file=sys.stderr)
 
     # channel id -> group label
     group_of: dict[str, str] = {}

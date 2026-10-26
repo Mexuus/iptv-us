@@ -2,9 +2,10 @@
 # Matching is case-insensitive and ignores spaces/punctuation, against the
 # channel name and its alt_names in the iptv-org database.
 #
-# Names here were checked against US channels that have at least one free stream.
-# Entries that can't be matched are skipped with a warning, so it is safe to add
-# speculative names. Find exact names here: https://iptv-org.github.io/
+# Only English-language feeds are published, so non-English channels listed here are
+# dropped at build time. Names were checked against US channels that have at least one
+# free stream. Entries that can't be matched are skipped with a warning, so it is safe
+# to add speculative names. Find exact names here: https://iptv-org.github.io/
 
 Broadcast:
   - ABC
@@ -12,16 +13,11 @@ Broadcast:
   - NBC
   - Fox
   - PBS
-  - Telemundo
-  - Univision
-  - UniMas
-  - Estrella TV
 
 Sports:
   - ESPN
   - ESPN 2
   - ESPNU
-  - ESPN Deportes
   - SEC Network
   - ACC Network
   - Big Ten Network
@@ -38,7 +34,6 @@ Sports:
   - Tennis Channel
   - beIN SPORTS XTRA
   - WWE Network
-  - TUDN
   - MAVTV
   - Stadium
   - SportsGrid
@@ -50,9 +45,7 @@ Sports:
   - NBC Sports NOW
   - DraftKings Network
   - Overtime
-  - beIN SPORTS XTRA en Espanol
   - Pluto TV Competition
-  - Pluto TV Deportes
   - Pluto TV E-Sports
   - American Ninja Warrior
   # Hockey / motorsport / combat / niche league feeds
