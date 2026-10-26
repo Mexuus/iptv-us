@@ -20,6 +20,7 @@ import json
 import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -69,6 +70,18 @@ def quality_score(stream: dict) -> int:
     q = QUALITY_RANK.get(stream.get("quality") or "", 0)
     penalty = len(stream.get("labels") or [])  # "Not 24/7", "Geo-blocked", etc.
     return q * 10 - penalty
+
+
+BARE_IP = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
+
+
+def official_host(url: str) -> bool:
+    """Bare-IP hosts signal unauthorized restreams; official FAST services always use CDN domains."""
+    try:
+        host = urllib.parse.urlsplit(url).hostname or ""
+    except ValueError:
+        return False
+    return bool(host) and not BARE_IP.match(host)
 
 
 def probe(url: str) -> bool:
@@ -151,10 +164,17 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
 
     # Pick the best stream(s) per channel.
     entries: list[tuple[dict, dict]] = []
+    restreams = 0
     for c in ordered:
-        best = sorted(streams_for[c["id"]], key=quality_score, reverse=True)
+        usable = [s for s in streams_for[c["id"]] if official_host(s["url"])]
+        if not usable:
+            restreams += 1
+            continue
+        best = sorted(usable, key=quality_score, reverse=True)
         for s in best[:limit_per_channel]:
             entries.append((c, s))
+    if restreams:
+        print(f"Skipped {restreams} channels with only bare-IP restreams.", file=sys.stderr)
 
     if check:
         print(f"Probing {len(entries)} stream URLs ...", file=sys.stderr)
