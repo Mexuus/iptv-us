@@ -74,6 +74,20 @@ def quality_score(stream: dict) -> int:
 
 BARE_IP = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
 
+NUMBERS_FILE = HERE / "channel-numbers.json"
+FIRST_CHANNEL = 1000
+
+
+def load_numbers() -> dict[str, int]:
+    if not NUMBERS_FILE.exists():
+        return {}
+    return {k: int(v) for k, v in json.loads(NUMBERS_FILE.read_text(encoding="utf-8")).items()}
+
+
+def save_numbers(numbers: dict[str, int]) -> None:
+    ordered = dict(sorted(numbers.items(), key=lambda kv: kv[1]))
+    NUMBERS_FILE.write_text(json.dumps(ordered, indent=2) + "\n", encoding="utf-8")
+
 
 def official_host(url: str) -> bool:
     """Bare-IP hosts signal unauthorized restreams; official FAST services always use CDN domains."""
@@ -184,6 +198,11 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
         entries = [e for e, ok in zip(entries, alive) if ok]
         print(f"Dropped {dropped} dead streams.", file=sys.stderr)
 
+    # Channel numbers are sticky so Plex's DVR lineup survives playlist changes.
+    numbers = load_numbers() if curated else {}
+    next_free = max(numbers.values(), default=FIRST_CHANNEL - 1) + 1
+    added = 0
+
     lines = [f'#EXTM3U x-tvg-url="{EPG_URL}"']
     for c, s in entries:
         feed = s.get("feed")
@@ -197,11 +216,21 @@ def build(curated: bool, check: bool, out: Path, limit_per_channel: int) -> None
             f'tvg-logo="{logo_for.get(c["id"], "")}"',
             f'group-title="{group_of[c["id"]]}"',
         ]
+        if curated:
+            if cid not in numbers:
+                numbers[cid] = next_free
+                next_free += 1
+                added += 1
+            attrs.insert(1, f'tvg-chno="{numbers[cid]}"')
         lines.append(f'#EXTINF:-1 {" ".join(attrs)},{name}')
         if s.get("referrer"):
             lines.append(f'#EXTVLCOPT:http-referrer={s["referrer"]}')
         lines.append(f'#EXTVLCOPT:http-user-agent={s.get("user_agent") or UA}')
         lines.append(s["url"])
+
+    if curated:
+        save_numbers(numbers)
+        print(f"Channel numbers: {len(numbers)} known, {added} newly assigned.", file=sys.stderr)
 
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Wrote {len(entries)} entries to {out}", file=sys.stderr)
