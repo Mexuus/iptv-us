@@ -371,9 +371,6 @@ https://jmp2.uk/plu-63f87d057533d80008ab9549.m3u8
 #EXTINF:-1 tvg-id="iCarly.us@SD" tvg-chno="1274" tvg-logo="https://i.imgur.com/R6jWcqz.png" group-title="Kids & Family",iCarly
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36
 https://jmp2.uk/plu-6450209d939a5900084dba1d.m3u8
-#EXTINF:-1 tvg-id="Degrassi.us" tvg-chno="1140" tvg-logo="https://i.imgur.com/vhSzfDC.png" group-title="Kids & Family",Degrassi (720p)
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36
-https://d3537vnymvfque.cloudfront.net/playlist.m3u8
 #EXTINF:-1 tvg-id="KartoonChannel.us" tvg-chno="1141" tvg-logo="https://i.imgur.com/1luzP3T.png" group-title="Kids & Family",Kartoon Channel! (1080p)
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36
 https://lightning-fnf-samsungaus.amagi.tv/playlist.m3u8
@@ -404,9 +401,6 @@ https://jmp2.uk/plu-677f927554f43dad4b3258aa.m3u8
 #EXTINF:-1 tvg-id="SmurfTV.us" tvg-chno="1150" tvg-logo="https://img.static-ottera.com/prod/tg/linear_channel/thumbnails/widescreen/EJIyYyBMkbW5UntSCAkGp-uLla7Z8KWHvDjyEqoOf3k.jpg" group-title="Kids & Family",Smurf TV (480p)
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36
 https://stream.ads.ottera.tv/playlist.m3u8?network_id=4065
-#EXTINF:-1 tvg-id="LEGOKidsTV.us" tvg-chno="1151" tvg-logo="https://i.imgur.com/tMfEsVr.png" group-title="Kids & Family",LEGO Kids TV
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36
-https://jmp2.uk/plu-60fb01a24795a6000762fe83.m3u8
 #EXTINF:-1 tvg-id="LegoChannel.us" tvg-chno="1152" tvg-logo="https://i.imgur.com/xePwW13.png" group-title="Kids & Family",Lego Channel (1080p)
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36
 https://dltiqboxjw21d.cloudfront.net/index.m3u8
